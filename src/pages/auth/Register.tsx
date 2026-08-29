@@ -34,6 +34,9 @@ export default function Register() {
         {
           email,
           password,
+          options: {
+            data: { full_name: fullName },
+          },
         }
       );
 
@@ -44,22 +47,6 @@ export default function Register() {
 
       if (!authData.user) {
         setError('Registration failed. Please try again.');
-        return;
-      }
-
-      // Create profile with CUSTOMER role by default
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: authData.user.id,
-          full_name: fullName,
-          email: email,
-          role: 'CUSTOMER',
-        });
-
-      if (profileError) {
-        console.error('Error creating profile:', profileError);
-        setError('Failed to create profile');
         return;
       }
 
