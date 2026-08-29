@@ -20,6 +20,7 @@ import CustomerCart from '@/pages/customer/Cart';
 import CustomerOrders from '@/pages/customer/Orders';
 import CustomerOrderDetail from '@/pages/customer/OrderDetail';
 import CustomerProfile from '@/pages/customer/Profile';
+import Storefront from '@/pages/storefront/Storefront';
 
 // Staff Pages
 import StaffLayout from '@/components/layouts/StaffLayout';
@@ -186,27 +187,8 @@ function App() {
         </Route>
 
         {/* Redirect to appropriate dashboard based on role */}
-        <Route
-          path="/"
-          element={
-            user ? (
-              <Navigate
-                to={
-                  user.role === 'ADMIN'
-                    ? '/admin'
-                    : user.role === 'STAFF'
-                      ? '/staff'
-                      : user.role === 'RIDER'
-                        ? '/rider'
-                        : '/customer'
-                }
-                replace
-              />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        <Route path="/" element={<Storefront />} />
+        <Route path="/products" element={<Storefront />} />
 
         {/* Catch-all for undefined routes */}
         <Route path="*" element={<Navigate to="/" replace />} />
