@@ -10,6 +10,7 @@ export default function Storefront() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,7 +22,12 @@ export default function Storefront() {
         .ilike('name', `%${searchQuery}%`);
 
       const { data, error } = await query;
-      if (error) console.error('Error fetching products:', error);
+      if (error) {
+        console.error('Error fetching products:', error);
+        setLoadError('Products are temporarily unavailable. Please try again shortly.');
+      } else {
+        setLoadError('');
+      }
       setProducts(data || []);
       setIsLoading(false);
     };
@@ -98,6 +104,11 @@ export default function Storefront() {
           {isLoading ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Loading products">
               {[1, 2, 3, 4].map((item) => <div key={item} className="h-96 animate-pulse rounded-2xl bg-slate-200" />)}
+            </div>
+          ) : loadError ? (
+            <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-6 py-16 text-center">
+              <p className="font-semibold text-red-900">Unable to load products</p>
+              <p className="mt-1 text-sm text-red-700">{loadError}</p>
             </div>
           ) : products.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">

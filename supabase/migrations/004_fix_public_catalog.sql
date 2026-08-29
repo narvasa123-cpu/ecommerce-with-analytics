@@ -1,4 +1,11 @@
--- Seed categories
+-- Existing databases may already have 002_rls_policies.sql applied.
+-- Its staff product policy queries profiles, while profiles has an admin
+-- policy that queries profiles again. PostgreSQL detects that as recursion.
+-- Active products are intentionally public, so the staff policy is not needed
+-- for the storefront and must be removed from the recursive read path.
+DROP POLICY IF EXISTS products_select_staff ON products;
+
+-- Re-run the corrected seed for projects where 003 was already applied.
 INSERT INTO categories (name, description, image_url, is_active) VALUES
   ('Electronics', 'Electronic devices and gadgets', 'https://via.placeholder.com/300x200?text=Electronics', true),
   ('Accessories', 'Cables, adapters, and accessories', 'https://via.placeholder.com/300x200?text=Accessories', true),
@@ -6,8 +13,6 @@ INSERT INTO categories (name, description, image_url, is_active) VALUES
   ('Computer Accessories', 'Computer peripherals and accessories', 'https://via.placeholder.com/300x200?text=Computer', true)
 ON CONFLICT (name) DO NOTHING;
 
--- Seed products. Join categories by name so every row has a guaranteed
--- category_id, and upsert by SKU so this script can safely be run again.
 INSERT INTO products (category_id, sku, name, description, price, stock_quantity, minimum_stock, image_url, is_active)
 SELECT categories.id, seed.sku, seed.name, seed.description, seed.price, seed.stock_quantity,
   seed.minimum_stock, seed.image_url, seed.is_active
@@ -28,27 +33,3 @@ ON CONFLICT (sku) DO UPDATE SET
   minimum_stock = EXCLUDED.minimum_stock,
   image_url = EXCLUDED.image_url,
   is_active = EXCLUDED.is_active;
-
--- Note: Development profiles and users should be created through the Supabase Auth UI
--- or via a secure setup script. Do NOT insert raw passwords or auth data here.
--- Use the following guidance for development account creation:
---
--- Admin Account:
---   Name: Alex Santos
---   Email: admin@example.com
---   Role: ADMIN
---
--- Staff Account:
---   Name: Maria Cruz
---   Email: staff@example.com
---   Role: STAFF
---
--- Rider Account:
---   Name: Juan Dela Cruz
---   Email: rider@example.com
---   Role: RIDER
---
--- Customer Account:
---   Name: Daniel Reyes
---   Email: customer@example.com
---   Role: CUSTOMER
