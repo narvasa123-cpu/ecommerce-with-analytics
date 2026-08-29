@@ -74,13 +74,13 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-slate-100">
       <Sidebar navItems={navItems} logo="E-Commerce" logoAlt="Admin Portal" />
 
-      <div className="flex-1 flex flex-col lg:ml-0">
+      <div className="flex min-w-0 flex-1 flex-col lg:ml-0">
         <TopBar user={user} />
 
-        <main className="flex-1 overflow-auto p-4 sm:p-6">
+        <main id="main-content" className="flex-1 overflow-auto p-4 sm:p-8">
           <Outlet />
         </main>
       </div>
