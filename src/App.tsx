@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import type { Profile } from '@/types';
 
 // Auth Pages
-import Login from '@/pages/auth/Login';
-import Register from '@/pages/auth/Register';
+const Login = lazy(() => import('@/pages/auth/Login'));
+const Register = lazy(() => import('@/pages/auth/Register'));
 import AuthLayout from '@/components/layouts/AuthLayout';
 
 // Protected Route Component
@@ -13,37 +13,38 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 // Customer Pages
 import CustomerLayout from '@/components/layouts/CustomerLayout';
-import CustomerDashboard from '@/pages/customer/Dashboard';
-import CustomerProducts from '@/pages/customer/Products';
-import CustomerProductDetail from '@/pages/customer/ProductDetail';
-import CustomerCart from '@/pages/customer/Cart';
-import CustomerCheckout from '@/pages/customer/Checkout';
-import CustomerOrders from '@/pages/customer/Orders';
-import CustomerOrderDetail from '@/pages/customer/OrderDetail';
-import CustomerProfile from '@/pages/customer/Profile';
-import Storefront from '@/pages/storefront/Storefront';
-import NotificationsPage from '@/pages/Notifications';
+const CustomerDashboard = lazy(() => import('@/pages/customer/Dashboard'));
+const CustomerProducts = lazy(() => import('@/pages/customer/Products'));
+const CustomerProductDetail = lazy(() => import('@/pages/customer/ProductDetail'));
+const CustomerCart = lazy(() => import('@/pages/customer/Cart'));
+const CustomerCheckout = lazy(() => import('@/pages/customer/Checkout'));
+const CustomerOrders = lazy(() => import('@/pages/customer/Orders'));
+const CustomerOrderDetail = lazy(() => import('@/pages/customer/OrderDetail'));
+const CustomerProfile = lazy(() => import('@/pages/customer/Profile'));
+const Storefront = lazy(() => import('@/pages/storefront/Storefront'));
+const NotificationsPage = lazy(() => import('@/pages/Notifications'));
 
 // Staff Pages
 import StaffLayout from '@/components/layouts/StaffLayout';
-import StaffDashboard from '@/pages/staff/Dashboard';
-import StaffProducts from '@/pages/staff/Products';
-import StaffOrders from '@/pages/staff/Orders';
-import StaffInventory from '@/pages/staff/Inventory';
+const StaffDashboard = lazy(() => import('@/pages/staff/Dashboard'));
+const StaffProducts = lazy(() => import('@/pages/staff/Products'));
+const StaffOrders = lazy(() => import('@/pages/staff/Orders'));
+const StaffInventory = lazy(() => import('@/pages/staff/Inventory'));
 
 // Rider Pages
 import RiderLayout from '@/components/layouts/RiderLayout';
-import RiderDashboard from '@/pages/rider/Dashboard';
-import RiderDeliveries from '@/pages/rider/Deliveries';
+const RiderDashboard = lazy(() => import('@/pages/rider/Dashboard'));
+const RiderDeliveries = lazy(() => import('@/pages/rider/Deliveries'));
 
 // Admin Pages
 import AdminLayout from '@/components/layouts/AdminLayout';
-import AdminDashboard from '@/pages/admin/Dashboard';
-import AdminAnalytics from '@/pages/admin/Analytics';
-import AdminSales from '@/pages/admin/Sales';
-import AdminProducts from '@/pages/admin/Products';
-import AdminOrders from '@/pages/admin/Orders';
-import AdminUsers from '@/pages/admin/Users';
+const AdminDashboard = lazy(() => import('@/pages/admin/Dashboard'));
+const AdminAnalytics = lazy(() => import('@/pages/admin/Analytics'));
+const AdminSales = lazy(() => import('@/pages/admin/Sales'));
+const AdminProducts = lazy(() => import('@/pages/admin/Products'));
+const AdminOrders = lazy(() => import('@/pages/admin/Orders'));
+const AdminUsers = lazy(() => import('@/pages/admin/Users'));
+const AdminAuditLogs = lazy(() => import('@/pages/admin/AuditLogs'));
 
 function App() {
   const [user, setUser] = useState<Profile | null>(null);
@@ -109,6 +110,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">Loading workspace…</div>}>
       <Routes>
         {/* Auth Routes */}
         <Route element={<AuthLayout />}>
@@ -191,6 +193,7 @@ function App() {
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/inventory" element={<StaffInventory />} />
           <Route path="/admin/notifications" element={<NotificationsPage user={user} />} />
+          <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
         </Route>
 
         {/* Redirect to appropriate dashboard based on role */}
@@ -200,6 +203,7 @@ function App() {
         {/* Catch-all for undefined routes */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

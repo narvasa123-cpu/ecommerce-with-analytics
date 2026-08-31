@@ -334,15 +334,12 @@ For issues or questions:
 
 ## Next Steps
 
-The project is in initial setup phase. Key areas for development:
+The core commerce workflows are implemented. Remaining production hardening:
 
-1. **Core Services** - Implement service layer for all database operations
-2. **Shopping Cart** - Complete cart functionality with CRUD operations
-3. **Checkout** - Implement complete checkout flow
-4. **Order Management** - Complete order processing system
-5. **Analytics** - Build comprehensive analytics dashboards
-6. **Notifications** - Implement real-time notifications
-7. **Testing** - Write unit and integration tests
-8. **Documentation** - Expand API documentation
+1. Run Supabase migrations `007` through `010` in order.
+2. Enable Realtime for the `notifications` table.
+3. Execute `npm test` and complete `tests/RLS_CHECKLIST.md` with real role accounts.
+4. Add server-side PDF/report archival if long-term report retention is required.
+5. Consider further route-level chunking for the analytics/reporting bundle.
 
-See the TODO list in the project for detailed implementation roadmap.
+See `tests/RLS_CHECKLIST.md` for the access-control verification matrix.

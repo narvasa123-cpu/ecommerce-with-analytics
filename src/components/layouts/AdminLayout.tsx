@@ -9,6 +9,7 @@ import {
   Users,
   Box,
   Bell,
+  ClipboardList,
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
@@ -62,6 +63,7 @@ export default function AdminLayout() {
     { href: '/admin/users', label: 'Users', icon: <Users size={20} /> },
     { href: '/admin/inventory', label: 'Inventory', icon: <Box size={20} /> },
     { href: '/admin/notifications', label: 'Notifications', icon: <Bell size={20} /> },
+    { href: '/admin/audit-logs', label: 'Audit logs', icon: <ClipboardList size={20} /> },
   ];
 
   if (isLoading) {
