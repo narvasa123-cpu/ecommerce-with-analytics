@@ -128,6 +128,9 @@ export interface Delivery {
   status: DeliveryStatus;
   pickup_time: string | null;
   delivery_time: string | null;
+  accepted_at?: string | null;
+  picked_up_at?: string | null;
+  delivered_at?: string | null;
   notes: string | null;
   created_at: string;
   updated_at: string;

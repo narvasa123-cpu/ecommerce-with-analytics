@@ -17,6 +17,7 @@ import CustomerDashboard from '@/pages/customer/Dashboard';
 import CustomerProducts from '@/pages/customer/Products';
 import CustomerProductDetail from '@/pages/customer/ProductDetail';
 import CustomerCart from '@/pages/customer/Cart';
+import CustomerCheckout from '@/pages/customer/Checkout';
 import CustomerOrders from '@/pages/customer/Orders';
 import CustomerOrderDetail from '@/pages/customer/OrderDetail';
 import CustomerProfile from '@/pages/customer/Profile';
@@ -129,6 +130,7 @@ function App() {
           <Route path="/customer/products" element={<CustomerProducts />} />
           <Route path="/customer/products/:id" element={<CustomerProductDetail />} />
           <Route path="/customer/cart" element={<CustomerCart />} />
+          <Route path="/customer/checkout" element={<CustomerCheckout />} />
           <Route path="/customer/orders" element={<CustomerOrders />} />
           <Route path="/customer/orders/:id" element={<CustomerOrderDetail />} />
           <Route path="/customer/profile" element={<CustomerProfile />} />

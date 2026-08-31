@@ -1,0 +1,10 @@
+import { supabase } from '@/lib/supabase';
+import type { Order, OrderStatus } from '@/types';
+import { assertData, assertOk, normalizeError, pageRange } from './base';
+
+export async function listOrders(options: { page?: number; pageSize?: number; userId?: string; status?: OrderStatus } = {}) { const range = pageRange(options.page, options.pageSize); let query = supabase.from('orders').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(range.from, range.to); if (options.userId) query = query.eq('user_id', options.userId); if (options.status) query = query.eq('status', options.status); const { data, error, count } = await query; return { data: assertData((data as Order[]) || [], error, 'Unable to load orders.'), count: count || 0, page: range.page, pageSize: range.pageSize }; }
+export async function getOrder(id: string) { const { data, error } = await supabase.from('orders').select('*, order_items(*, product:products(*)), deliveries(*)').eq('id', id).single(); return assertData(data as Order | null, error, 'Unable to load order.'); }
+export async function createOrderFromCart(input: { addressId: string; contactNumber: string; paymentMethod?: string; notes?: string }) { const { data, error } = await supabase.rpc('checkout_cart', { p_delivery_address_id: input.addressId, p_contact_number: input.contactNumber, p_payment_method: input.paymentMethod || null, p_notes: input.notes || null }); if (error) throw normalizeError(error, 'Unable to complete checkout.'); return data as Order; }
+export async function updateOrderStatus(id: string, status: OrderStatus, notes?: string) { const { data, error } = await supabase.rpc('transition_order_status', { p_order_id: id, p_new_status: status, p_notes: notes || null }); return assertData(data as Order | null, error, 'Unable to update order status.'); }
+export async function cancelOrder(id: string) { return updateOrderStatus(id, 'CANCELLED'); }
+export async function addOrderNote(id: string, notes: string) { const { error } = await supabase.from('orders').update({ notes }).eq('id', id); assertOk(error, 'Unable to save order note.'); }

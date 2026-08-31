@@ -95,6 +95,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-here
    - Run the query
    - Repeat for `002_rls_policies.sql`
    - Repeat for `003_seed_data.sql`
+   - Repeat for migrations `004` through `009` in filename order
 
 ### 5. Create Test Users
 

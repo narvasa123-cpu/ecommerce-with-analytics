@@ -1,10 +1,17 @@
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, CheckCircle2, Package, XCircle } from 'lucide-react';
+import { cancelOrder, getOrder } from '@/services/orders';
+import { formatCurrency, formatDateTime } from '@/lib/auth';
+import type { Order, OrderItem, Product } from '@/types';
+
+type OrderDetail = Order & { order_items?: (OrderItem & { product?: Product })[] };
+const labels: Record<string, string> = { PENDING: 'Pending', CONFIRMED: 'Confirmed', PROCESSING: 'Processing', READY_FOR_PICKUP: 'Ready for pickup', ASSIGNED: 'Assigned', PICKED_UP: 'Picked up', OUT_FOR_DELIVERY: 'Out for delivery', DELIVERED: 'Delivered', CANCELLED: 'Cancelled' };
+
 export default function CustomerOrderDetail() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
-      <div className="bg-white rounded-lg shadow p-6">
-        <p className="text-gray-600">Order details - Coming soon</p>
-      </div>
-    </div>
-  );
+  const { id } = useParams() as { id: string }; const [order, setOrder] = useState<OrderDetail | null>(null); const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false); const [error, setError] = useState('');
+  useEffect(() => { if (!id) return; async function load() { try { setOrder(await getOrder(id) as OrderDetail); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Unable to load order.'); } finally { setLoading(false); } } void load(); }, [id]);
+  const cancel = async () => { if (!order || !window.confirm('Cancel this order?')) return; setSaving(true); try { setOrder(await cancelOrder(order.id) as OrderDetail); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Unable to cancel order.'); } finally { setSaving(false); } };
+  if (loading) return <div className="flex min-h-64 items-center justify-center text-slate-500">Loading order…</div>; if (!order) return <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{error || 'Order not found.'}</div>; const items = order.order_items || [];
+  return <div className="mx-auto max-w-4xl space-y-6"><Link to="/customer/orders" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900"><ArrowLeft size={16} /> Back to orders</Link><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-sm font-semibold uppercase tracking-wider text-blue-600">Order details</p><h1 className="mt-1 text-3xl font-bold text-slate-900">{order.order_number}</h1><p className="mt-1 text-slate-500">Placed {formatDateTime(order.created_at)}</p></div><span className="inline-flex w-fit rounded-full bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-700">{labels[order.status] || order.status}</span></div>{error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>}<div className="grid gap-6 lg:grid-cols-[1fr_300px]"><section className="rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 p-5 sm:p-6"><h2 className="font-bold text-slate-900">Items in this order</h2></div><div className="divide-y divide-slate-100">{items.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 p-5"><div className="flex min-w-0 items-center gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500"><Package size={17} /></span><div className="min-w-0"><p className="truncate font-semibold text-slate-900">{item.product?.name || 'Product'}</p><p className="text-sm text-slate-500">Qty {item.quantity}</p></div></div><span className="font-semibold text-slate-900">{formatCurrency(Number(item.subtotal))}</span></div>)}</div></section><aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 className="font-bold text-slate-900">Summary</h2><div className="mt-5 flex justify-between text-sm text-slate-500"><span>Subtotal</span><span>{formatCurrency(Number(order.subtotal))}</span></div><div className="mt-3 flex justify-between text-sm text-slate-500"><span>Delivery</span><span>{formatCurrency(Number(order.delivery_fee))}</span></div><div className="my-5 border-t border-slate-100" /><div className="flex justify-between font-bold text-slate-900"><span>Total</span><span>{formatCurrency(Number(order.total))}</span></div>{['PENDING', 'CONFIRMED'].includes(order.status) && <button type="button" disabled={saving} onClick={() => void cancel()} className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-rose-200 text-sm font-semibold text-rose-600 hover:bg-rose-50 disabled:opacity-50"><XCircle size={16} /> {saving ? 'Cancelling…' : 'Cancel order'}</button>}<p className="mt-5 flex gap-2 text-xs leading-5 text-slate-500"><CheckCircle2 size={16} className="shrink-0 text-emerald-600" /> Status changes are recorded securely.</p></aside></div></div>;
 }

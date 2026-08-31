@@ -1,10 +1,9 @@
-export default function CustomerOrders() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
-      <div className="bg-white rounded-lg shadow p-6">
-        <p className="text-gray-600">Orders list - Coming soon</p>
-      </div>
-    </div>
-  );
-}
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Package } from 'lucide-react';
+import { listOrders } from '@/services/orders';
+import { formatCurrency, formatDate } from '@/lib/auth';
+import type { Order } from '@/types';
+
+const labels: Record<string, string> = { PENDING: 'Pending', CONFIRMED: 'Confirmed', PROCESSING: 'Processing', READY_FOR_PICKUP: 'Ready for pickup', ASSIGNED: 'Assigned', PICKED_UP: 'Picked up', OUT_FOR_DELIVERY: 'Out for delivery', DELIVERED: 'Delivered', CANCELLED: 'Cancelled' };
+export default function CustomerOrders() { const [orders, setOrders] = useState<Order[]>([]); const [loading, setLoading] = useState(true); const [error, setError] = useState(''); useEffect(() => { async function load() { const { data: auth } = await import('@/lib/supabase').then(({ supabase }) => supabase.auth.getUser()); if (!auth.user) return; try { const result = await listOrders({ userId: auth.user.id, pageSize: 50 }); setOrders(result.data); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Unable to load orders.'); } finally { setLoading(false); } } void load(); }, []); return <div className="space-y-6"><div><p className="text-sm font-semibold uppercase tracking-wider text-blue-600">Purchase history</p><h1 className="mt-1 text-3xl font-bold text-slate-900">My orders</h1><p className="mt-1 text-slate-500">Track every order from payment to delivery.</p></div>{error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>}{loading ? <div className="flex min-h-64 items-center justify-center text-slate-500">Loading orders…</div> : <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="divide-y divide-slate-100">{orders.length ? orders.map((order) => <Link to={`/customer/orders/${order.id}`} key={order.id} className="flex items-center justify-between gap-4 p-5 hover:bg-slate-50 sm:p-6"><div className="flex min-w-0 items-center gap-4"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><Package size={19} /></span><div className="min-w-0"><p className="font-semibold text-slate-900">{order.order_number}</p><p className="mt-1 text-sm text-slate-500">Placed {formatDate(order.created_at)}</p></div></div><div className="text-right"><p className="font-bold text-slate-900">{formatCurrency(Number(order.total))}</p><span className="mt-1 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">{labels[order.status] || order.status}</span></div></Link>) : <div className="px-6 py-16 text-center text-slate-500">You have not placed an order yet.</div>}</div></div>}</div>; }
