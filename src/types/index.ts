@@ -158,9 +158,12 @@ export interface Review {
   rating: number;
   review_text: string | null;
   is_verified_purchase: boolean;
+  is_approved?: boolean;
   created_at: string;
   updated_at: string;
 }
+
+export interface WishlistItem { id: string; product_id: string; created_at: string; product: Product; }
 
 export interface Notification {
   id: string;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ShoppingBag, ShoppingCart, Package, User, Home } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Package, User, Home, Heart } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
 import { supabase } from '@/lib/supabase';
@@ -44,6 +44,7 @@ export default function CustomerLayout() {
       icon: <ShoppingBag size={20} />,
     },
     { href: '/customer/cart', label: 'Cart', icon: <ShoppingCart size={20} /> },
+    { href: '/customer/wishlist', label: 'Wishlist', icon: <Heart size={20} /> },
     { href: '/customer/orders', label: 'Orders', icon: <Package size={20} /> },
     { href: '/customer/profile', label: 'Profile', icon: <User size={20} /> },
   ];

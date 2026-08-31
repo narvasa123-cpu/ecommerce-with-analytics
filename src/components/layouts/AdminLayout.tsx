@@ -10,6 +10,8 @@ import {
   Box,
   Bell,
   ClipboardList,
+  Tags,
+  Star,
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
@@ -59,6 +61,8 @@ export default function AdminLayout() {
       label: 'Products',
       icon: <ShoppingBag size={20} />,
     },
+    { href: '/admin/categories', label: 'Categories', icon: <Tags size={20} /> },
+    { href: '/admin/reviews', label: 'Reviews', icon: <Star size={20} /> },
     { href: '/admin/orders', label: 'Orders', icon: <Package size={20} /> },
     { href: '/admin/users', label: 'Users', icon: <Users size={20} /> },
     { href: '/admin/inventory', label: 'Inventory', icon: <Box size={20} /> },

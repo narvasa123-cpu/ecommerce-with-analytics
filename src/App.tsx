@@ -21,6 +21,7 @@ const CustomerCheckout = lazy(() => import('@/pages/customer/Checkout'));
 const CustomerOrders = lazy(() => import('@/pages/customer/Orders'));
 const CustomerOrderDetail = lazy(() => import('@/pages/customer/OrderDetail'));
 const CustomerProfile = lazy(() => import('@/pages/customer/Profile'));
+const CustomerWishlist = lazy(() => import('@/pages/customer/Wishlist'));
 const Storefront = lazy(() => import('@/pages/storefront/Storefront'));
 const NotificationsPage = lazy(() => import('@/pages/Notifications'));
 
@@ -45,6 +46,8 @@ const AdminProducts = lazy(() => import('@/pages/admin/Products'));
 const AdminOrders = lazy(() => import('@/pages/admin/Orders'));
 const AdminUsers = lazy(() => import('@/pages/admin/Users'));
 const AdminAuditLogs = lazy(() => import('@/pages/admin/AuditLogs'));
+const AdminCategories = lazy(() => import('@/pages/admin/Categories'));
+const AdminReviews = lazy(() => import('@/pages/admin/Reviews'));
 
 function App() {
   const [user, setUser] = useState<Profile | null>(null);
@@ -137,6 +140,7 @@ function App() {
           <Route path="/customer/orders" element={<CustomerOrders />} />
           <Route path="/customer/orders/:id" element={<CustomerOrderDetail />} />
           <Route path="/customer/profile" element={<CustomerProfile />} />
+          <Route path="/customer/wishlist" element={<CustomerWishlist />} />
           <Route path="/customer/notifications" element={<NotificationsPage user={user} />} />
         </Route>
 
@@ -189,6 +193,8 @@ function App() {
           <Route path="/admin/analytics" element={<AdminAnalytics />} />
           <Route path="/admin/sales" element={<AdminSales />} />
           <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/categories" element={<AdminCategories />} />
+          <Route path="/admin/reviews" element={<AdminReviews />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/inventory" element={<StaffInventory />} />
