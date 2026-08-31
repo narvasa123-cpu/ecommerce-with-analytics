@@ -22,6 +22,7 @@ import CustomerOrders from '@/pages/customer/Orders';
 import CustomerOrderDetail from '@/pages/customer/OrderDetail';
 import CustomerProfile from '@/pages/customer/Profile';
 import Storefront from '@/pages/storefront/Storefront';
+import NotificationsPage from '@/pages/Notifications';
 
 // Staff Pages
 import StaffLayout from '@/components/layouts/StaffLayout';
@@ -134,6 +135,7 @@ function App() {
           <Route path="/customer/orders" element={<CustomerOrders />} />
           <Route path="/customer/orders/:id" element={<CustomerOrderDetail />} />
           <Route path="/customer/profile" element={<CustomerProfile />} />
+          <Route path="/customer/notifications" element={<NotificationsPage user={user} />} />
         </Route>
 
         {/* Staff Routes */}
@@ -151,6 +153,7 @@ function App() {
           <Route path="/staff/products" element={<StaffProducts />} />
           <Route path="/staff/orders" element={<StaffOrders />} />
           <Route path="/staff/inventory" element={<StaffInventory />} />
+          <Route path="/staff/notifications" element={<NotificationsPage user={user} />} />
         </Route>
 
         {/* Rider Routes */}
@@ -166,6 +169,7 @@ function App() {
         >
           <Route path="/rider" element={<RiderDashboard />} />
           <Route path="/rider/deliveries" element={<RiderDeliveries />} />
+          <Route path="/rider/notifications" element={<NotificationsPage user={user} />} />
         </Route>
 
         {/* Admin Routes */}
@@ -186,6 +190,7 @@ function App() {
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/inventory" element={<StaffInventory />} />
+          <Route path="/admin/notifications" element={<NotificationsPage user={user} />} />
         </Route>
 
         {/* Redirect to appropriate dashboard based on role */}
